@@ -1,8 +1,9 @@
+import copy
 class KGramHash:
     def __init__(self, k, string, operationHash):
         # 初始化KGramHash对象，指定k值和输入字符串
         self.k = k
-        self.document = string
+        self.document = copy.deepcopy(string)
         self.document.insert(0, " ")
         self.operationHash = operationHash
         self.hvalue = [0]
@@ -12,7 +13,6 @@ class KGramHash:
 
 
     def init_hash_value(self, operationHash):
-
         for i in range(1, len(self.document)):
             self.hvalue.append(self.hvalue[i-1]*self.base + operationHash[self.document[i]])
             self.pvalue.append(self.pvalue[i-1]*self.base)
@@ -52,4 +52,4 @@ class KGramHash:
                 if len(selected) == 0 or q[hh] != selected[-1][0]:
                     selected.append((q[hh], hashes[q[hh]]))
 
-        return selected
+        return selected, hashes

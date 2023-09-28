@@ -2,13 +2,6 @@ from KGramHash import KGramHash
 from Detect import Detect
 from ReadCode import ReadCode
 
-# str1 = ("A", "yabbadabbadoo")
-# str2 = ("B", "scoobydoobydoo")
-# str3 = ("C", "doobeedoobeedoo")
-
-# o = Detect((str1, str2, str3), 3, 4)
-# o.get_pairwise()
-
 operationHash = {}
 idx = 0
 
@@ -22,19 +15,19 @@ o1 = ReadCode("Code\Fib1.java")
 operations = o1.extract()
 for operation in operations:
     update(operation)
-o = KGramHash(3, operations, operationHash)
-print(o.extract(4))
+str1 = ("A", operations)
 
 o2 = ReadCode("Code\Fibonacci3.java")
 operations = o2.extract()
 for operation in operations:
     update(operation)
-o = KGramHash(3, operations, operationHash)
-print(o.extract(4))
+str2 = ("B", operations)
 
 o3 = ReadCode("Code\Fibonacci4.java")
 operations = o3.extract()
 for operation in operations:
     update(operation)
-o = KGramHash(3, operations, operationHash)
-print(o.extract(4))
+str3 = ("C", operations)
+
+o = Detect((str1, str2, str3), 3, 4, operationHash)
+o.get_pairwise()

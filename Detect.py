@@ -1,19 +1,24 @@
 from KGramHash import KGramHash
 
 class Detect:
-    def __init__(self, docs, k, W):
+    def __init__(self, docs, k, W, operationHash):
         # 初始化Detect对象，传入文档列表docs、k值和W值
         self.docs = [(title, str) for title, str in docs]  # 将文档列表重新组织为(title, document)元组列表
         self.k = k  # k值用于KGram哈希
         self.W = W  # W值用于匹配
+        self.operationHash = operationHash
         self.index = {}  # 存储哈希值和文档对应关系的索引
+        self.hashes_output = {}
+        self.extract_output = {}
         self.init_index()  # 调用初始化索引的方法
 
     def init_index(self):
         # 初始化索引，建立哈希值和文档对应关系
         for title, document in self.docs:
-            obj = KGramHash(self.k, document)  # 创建KGramHash对象
-            H = obj.extract(self.W)  # 提取文档的哈希值
+            obj = KGramHash(self.k, document, self.operationHash)  # 创建KGramHash对象
+            H, hashes = obj.extract(self.W)  # 提取文档的哈希值
+            self.hashes_output[title] = hashes
+            self.extract_output[title] = H
             for u, v in H:
                 if v not in self.index:
                     self.index[v] = [(title, u)]  # 如果哈希值不存在于索引中，创建一个新的条目
@@ -25,8 +30,7 @@ class Detect:
         matches = {}  # 存储匹配结果的字典
         H = []  # 存储所有文档的哈希值
         for title, document in self.docs:
-            obj = KGramHash(self.k, document)  # 创建KGramHash对象
-            selected = obj.extract(self.W)  # 提取文档的哈希值
+            selected = self.extract_output[title]
             matches[title] = []  # 初始化匹配结果列表
             for u, v in selected:
                 H.append((title, u, v))  # 将文档的哈希值添加到H中
@@ -51,6 +55,9 @@ class Detect:
                     pairwise[key].append((d2, u, v))  # 将匹配信息添加到文档对的列表中
 
         for key, value in pairwise.items():
-            print(key, ": ", value)  # 打印文档对和匹配信息
+            size1 = len(self.hashes_output[key[0]])
+            size2 = len(self.hashes_output[key[1]])
+            similarity = len(value) / max(size1, size2)
+            print(key, ": ", '{:.2%}'.format(similarity))  # 打印文档对和匹配信息
 
 
