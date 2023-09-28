@@ -1,48 +1,32 @@
 class KGramHash:
-    def __init__(self, k, string):
+    def __init__(self, k, string, operationHash):
         # 初始化KGramHash对象，指定k值和输入字符串
         self.k = k
         self.document = string
-        self.shingleHash = {}  # 存储shingle的哈希映射
-        self.init_hash_value()  # 调用初始化哈希值的方法
+        self.document.insert(0, " ")
+        self.operationHash = operationHash
+        self.hvalue = [0]
+        self.pvalue = [1]
+        self.base = 2
+        self.init_hash_value(operationHash)  # 调用初始化哈希值的方法
 
-    def init_hash_value(self):
-        # 初始化shingle的哈希值映射
-        self.shingleHash = {
-            ("aLOAD", "invokespecial", "return"): 1,
-            ("iLOAD", "iPUSH", "iIFCMP"): 2,
-            ("iPUSH", "iIFCMP", "iLOAD"): 3,
-            ("iIFCMP", "iLOAD", "iRETURN"): 4,
-            ("iLOAD", "iRETURN", "iLOAD"): 5,
-            ("iRETURN", "iLOAD", "iPUSH"): 6,
-            ("iLOAD", "iPUSH", "iSUB"): 7,
-            ("iPUSH", "iSUB", "invokestatic"): 8,
-            ("iSUB", "invokestatic", "iLOAD"): 9,
-            ("invokestatic", "iLOAD", "iPUSH"): 10,
-            ("iSUB", "invokestatic", "iADD"): 11,
-            ("invokestatic", "iADD", "iRETURN"): 12,
-            ("iPUSH", "iLOAD", "iIFCMP"): 13,
-            ("iLOAD", "iIFCMP", "iPUSH"): 14,
-            ("iIFCMP", "iPUSH", "iLOAD"): 15,
-            ("iPUSH", "iLOAD", "iADD"): 16,
-            ("iLOAD", "iADD", "invokestatic"): 17,
-            ("iADD", "invokestatic", "iPUSH"): 18,
-            ("invokestatic", "iPUSH", "iLOAD"): 19,
-            ("iADD", "invokestatic", "iADD"): 20,
-            ("iADD", "iRETURN", "iLOAD"): 21,
-            ("iRETURN", "iLOAD", "iRETURN"): 22,
-            ("invokestatic", "iADD", "GOTO"): 23,
-            ("iADD", "GOTO", "iLOAD"): 24,
-            ("GOTO", "iLOAD", "iRETURN"): 25,
-            ("invokespecial", "return", "iLOAD"): 0,
-            ("return", "iLOAD", "iPUSH"): 0,
-            ("iPUSH", "iIFCMP", "iPUSH"): 0,
-        }
+
+    def init_hash_value(self, operationHash):
+
+        for i in range(1, len(self.document)):
+            self.hvalue.append(self.hvalue[i-1]*self.base + operationHash[self.document[i]])
+            self.pvalue.append(self.pvalue[i-1]*self.base)
+
+    def get_hash_value(self, lposition, rposition):
+        return self.hvalue[rposition] - self.hvalue[lposition-1] * self.pvalue[rposition-lposition+1]
+    
 
     def get_hashes(self):
-        # 获取输入字符串中每个shingle的哈希值
-        n = len(self.document)
-        hashes = [self.shingleHash[tuple(self.document[i:i+self.k])] for i in range(n - self.k + 1)]
+        hashes = []
+        
+        for i in range(self.k, len(self.document)):
+            hashes.append(self.get_hash_value(i-self.k+1, i))
+
         return hashes
 
     def extract(self, W):
