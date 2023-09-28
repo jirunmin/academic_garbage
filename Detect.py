@@ -59,5 +59,3 @@ class Detect:
             size2 = len(self.hashes_output[key[1]])
             similarity = len(value) / max(size1, size2)
             print(key, ": ", '{:.2%}'.format(similarity))  # 打印文档对和匹配信息
-
-
