@@ -1,6 +1,7 @@
 import subprocess
 import os
 import re
+import shutil
 
 class ReadCode:
     def __init__(self, filename):
@@ -9,10 +10,14 @@ class ReadCode:
         self.replacement_dict = {
         'iconst': 'iPUSH',  
         'bipush': 'iPUSH',
+        'sipush': 'iPUSH',
+        'ldc': 'iPUSH',
+        'ldc2_w': 'iPUSH',
         'aload': 'aLOAD',
         'iload': 'iLOAD',
         'if_icmpgt': 'iIFCMP',
         'if_icmpge': 'iIFCMP',
+        'if_icmpeq': 'iIFCMP',
         'ireturn': 'iRETURN',
         'isub': 'iSUB',
         'iadd': 'iADD',
@@ -45,6 +50,8 @@ class ReadCode:
         except subprocess.CalledProcessError as e:
             print("Error:", e)
 
+
+        shutil.move(java_class_file, "Code\out", copy_function=shutil.copy2)
         return assembly_code
     
     def extract(self):

@@ -1,6 +1,7 @@
 from KGramHash import KGramHash
 from Detect import Detect
 from ReadCode import ReadCode
+import os
 
 operationHash = {}
 idx = 0
@@ -11,33 +12,41 @@ def update(operation):
         operationHash[operation] = idx
         idx += 1
 
-o1 = ReadCode("Code\centralCore.java")
-operations = o1.extract()
-for operation in operations:
-    update(operation)
-print(operations)
-str1 = ("A", operations)
+def load_folder(folderName):
+    folder_path = folderName
+    file_extension = ".java"
 
-o2 = ReadCode("Code\centralCore_Copy.java")
-operations = o2.extract()
-for operation in operations:
-    update(operation)
-# print(operations)
-str2 = ("B", operations)
+    # 用于存储匹配的文件列表
+    matching_files = []
 
-o3 = ReadCode("Code\centralCoreOther.java")
-operations = o3.extract()
-for operation in operations:
-    update(operation)
-# print(operations)
-str3 = ("C", operations)
+    # 遍历文件夹
+    for root, dirs, files in os.walk(folder_path):
+        for file in files:
+            if file.endswith(file_extension):
+                matching_files.append((os.path.splitext(file)[0], os.path.join(root, file)))
 
-o4 = ReadCode("Code\centralCoreOther_Copy.java")
-operations = o4.extract()
-for operation in operations:
-    update(operation)
-#print(operations)
-str4 = ("D", operations)
+    return matching_files
 
-# o = Detect((str1, str2, str3, str4), 3, 4, operationHash)
-# o.get_pairwise()
+
+def get_documents(files):
+    strs = []
+    for title, file in files:
+        o = ReadCode(file)
+        operations = o.extract()
+        for operation in operations:
+            update(operation)
+        strs.append((title, operations))
+
+    return strs
+
+o = Detect(get_documents(load_folder("Code")), 3, 4, operationHash)
+o.get_pairwise()
+
+# 定义要删除的文件夹路径
+folder_to_delete = "Code\out"
+
+# 遍历文件夹中的所有文件和子文件夹
+for root, dirs, files in os.walk(folder_to_delete):
+    for file in files:
+        file_path = os.path.join(root, file)
+        os.remove(file_path)  # 删除文件
