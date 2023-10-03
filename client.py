@@ -3,7 +3,7 @@ import pickle
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # 建立连接:
-s.connect(('127.0.0.1', 9999))
+s.connect(('127.0.0.1', 9998))
 
 data_to_send = {'folderName': "Code", 'threshold': "50"}
 # 序列化数据并发送给服务器
@@ -18,7 +18,8 @@ response_data = pickle.loads(response_data_serialized)
 
 # 处理相似度检测结果
 result = response_data['result']
-print(result)
+for (key, similarity) in result:
+    print(key, ": ", '{:.3%}'.format(similarity))  # 打印文档对和匹配信息
 
 #s.send(b'exit')
 s.close()

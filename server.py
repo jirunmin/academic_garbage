@@ -8,14 +8,14 @@ from MainProcedure import MainProcedure
 # 创建基于IPv4和TCP协议的Socket：
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # 监听端口:
-s.bind(('127.0.0.1', 9999))
+s.bind(('127.0.0.1', 9998))
 
 s.listen(5)
 print('Waiting for connection...')
 
 def tcplink(sock, addr):
     print('Accept new connection from %s:%s...' % addr)
-    sock.send(b'Welcome!')
+    # sock.send(b'Welcome!')
     while True:
         data = sock.recv(1024)
         time.sleep(1)
@@ -32,7 +32,7 @@ def tcplink(sock, addr):
         o = MainProcedure(folderName)
         result = o.start(int(threshold))
         # 将结果发送回客户端
-        response_data = {'result': 1}
+        response_data = {'result': result}
         response = pickle.dumps(response_data)
         sock.send(response)
         # sock.send(('Hello, %s!' % data.decode('utf-8')).encode('utf-8'))
