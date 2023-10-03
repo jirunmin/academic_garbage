@@ -9,6 +9,10 @@ class MainProcedure:
         self.operationHash = {}
         self.idx = 0
         self.folderName = folderName
+        self.out_folder = os.path.join(self.folderName, "out")
+
+        if not os.path.exists(self.out_folder):
+            os.mkdir(self.out_folder)
 
     def update(self, operation):
         if operation not in self.operationHash:
@@ -34,7 +38,7 @@ class MainProcedure:
     def get_documents(self, files):
         strs = []
         for title, file in files:
-            o = ReadCode(file, os.path.join(self.folderName, "out"))
+            o = ReadCode(file, self.out_folder)
             operations = o.extract()
             for operation in operations:
                 self.update(operation)
@@ -44,8 +48,10 @@ class MainProcedure:
 
     def start(self, threshold):
         o = Detect(self.get_documents(self.load_folder()), 3, 4, self.operationHash)
-        o.sift(threshold)
-        self.delete_file(os.path.join(self.folderName, "out"))
+        ans = o.sift(threshold)
+        self.delete_file(self.out_folder)
+
+        return ans
 
     def delete_file(self, folder_to_delete):
         # 遍历文件夹中的所有文件和子文件夹
@@ -54,5 +60,4 @@ class MainProcedure:
                 file_path = os.path.join(root, file)
                 os.remove(file_path)  # 删除文件
 
-
-
+        os.rmdir(folder_to_delete)

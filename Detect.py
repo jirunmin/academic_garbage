@@ -59,9 +59,14 @@ class Detect:
 
     def sift(self, percent):
         pairwise = self.get_pairwise()
+        answer = []
+
         for key, value in pairwise.items():
             size1 = len(self.hashes_output[key[0]])
             size2 = len(self.hashes_output[key[1]])
             similarity = len(value) / max(size1, size2)
             if similarity >= percent/100:
-                print(key, ": ", '{:.3%}'.format(similarity))  # 打印文档对和匹配信息
+                answer.append((key, similarity))
+                # print(key, ": ", '{:.3%}'.format(similarity))  # 打印文档对和匹配信息
+
+        return answer
