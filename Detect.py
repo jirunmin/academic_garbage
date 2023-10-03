@@ -54,8 +54,14 @@ class Detect:
                 else:
                     pairwise[key].append((d2, u, v))  # 将匹配信息添加到文档对的列表中
 
+        return pairwise
+        
+
+    def sift(self, percent):
+        pairwise = self.get_pairwise()
         for key, value in pairwise.items():
             size1 = len(self.hashes_output[key[0]])
             size2 = len(self.hashes_output[key[1]])
             similarity = len(value) / max(size1, size2)
-            print(key, ": ", '{:.2%}'.format(similarity))  # 打印文档对和匹配信息
+            if similarity >= percent/100:
+                print(key, ": ", '{:.3%}'.format(similarity))  # 打印文档对和匹配信息

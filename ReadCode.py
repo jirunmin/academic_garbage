@@ -4,8 +4,9 @@ import re
 import shutil
 
 class ReadCode:
-    def __init__(self, filename):
+    def __init__(self, filename, folder_move):
         self.filename = filename
+        self.folder_move = folder_move
 
         self.replacement_dict = {
         'iconst': 'iPUSH',  
@@ -51,7 +52,7 @@ class ReadCode:
             print("Error:", e)
 
 
-        shutil.move(java_class_file, "Code\out", copy_function=shutil.copy2)
+        shutil.move(java_class_file, self.folder_move, copy_function=shutil.copy2)
         return assembly_code
     
     def extract(self):
