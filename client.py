@@ -21,13 +21,4 @@ result = response_data['result']
 for (key, similarity) in result:
     print(key, ": ", '{:.3%}'.format(similarity))  # 打印文档对和匹配信息
 
-#s.send(b'exit')
 s.close()
-# # 接收欢迎消息:
-# print(s.recv(1024).decode('utf-8'))
-# for data in [b'Michael', b'Tracy', b'Sarah']:
-#     # 发送数据:
-#     s.send(data)
-#     print(s.recv(1024).decode('utf-8'))
-# s.send(b'exit')
-# s.close()
