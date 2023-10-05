@@ -18,7 +18,7 @@ class LocalCall(CallAPI):
 
 class TCPCall(CallAPI):
     def __init__(self, server_host, server_port):
-        python_program_path = "server.py"
+        python_program_path = "TCPserver.py"
         cmd = f"start cmd /k python {python_program_path}"
         self.process = subprocess.Popen(cmd, shell=True)
 
@@ -109,3 +109,32 @@ class HTTPCall(CallAPI):
             print(f'HTTP Error: {response.status_code}')
             print(response.text)
 
+        self.process.terminate()
+
+
+class WebServiceCall(CallAPI):
+    def __init__(self, url):
+        python_program_path = "WebServiceserver.py"
+        cmd = f"start cmd /k python {python_program_path}"
+        self.process = subprocess.Popen(cmd, shell=True)
+
+        time.sleep(2)
+        self.url = url
+
+    def call(self, folderName, threshold):
+        # 构建POST请求数据
+        data = {'folderName': folderName,'threshold': str(threshold)}
+
+        # 发送POST请求到WebService接口
+        response = requests.post(self.url, json=data)
+
+        # 处理HTTP响应
+        if response.status_code == 200:
+            result = response.json()
+            resultAns = result['result']
+            for (key, similarity) in resultAns:
+                print(key, ": ", '{:.3%}'.format(similarity))
+        else:
+            print("HTTP请求失败")
+
+        self.process.terminate()
