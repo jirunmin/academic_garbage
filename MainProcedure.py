@@ -1,5 +1,6 @@
 from Detect import Detect
 from ReadCode import ReadCode
+from BertTest import BERTmodel
 import os
 
 
@@ -47,8 +48,17 @@ class MainProcedure:
         return strs
 
     def start(self, threshold):
-        o = Detect(self.get_documents(self.load_folder()), 3, 4, self.operationHash)
+        docs = self.get_documents(self.load_folder())
+
+        o = Detect(docs, 3, 4, self.operationHash)
         ans = o.sift(threshold)
+
+        # other = BERTmodel(docs)
+        # otherans = other.sift(threshold)
+
+        # for (key, similarity) in otherans:
+        #     print(key, ": ", '{:.3%}'.format(similarity))  
+
         self.delete_file(self.out_folder)
 
         return ans
@@ -61,3 +71,6 @@ class MainProcedure:
                 os.remove(file_path)  # 删除文件
 
         os.rmdir(folder_to_delete)
+
+# o = MainProcedure("Code")
+# o.start(64)
