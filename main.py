@@ -6,8 +6,8 @@ from Call import *
 # HTTP: http://localhost:8080
 # WebService: http://localhost:8080/similarity
 
-o = Run("Code", 75, WebServiceCall("http://localhost:8080/similarity"))
+o = Run("Code", 80, WebServiceCall("http://localhost:8080/similarity"))
 o.run()
 
-o.setType(TCPCall('127.0.0.1', 9998))
-o.run()
+# o.setType(TCPCall('127.0.0.1', 9998))
+# o.run()
