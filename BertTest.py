@@ -7,7 +7,6 @@ class BERTmodel:
         self.docs = [(title, str) for title, str in docs]
 
         # 加载BERT模型和分词器
-        model_name = "bert-base-uncased"  # 可根据需要选择不同的BERT模型
         self.tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
         self.model = BertModel.from_pretrained("bert-base-uncased")
 
