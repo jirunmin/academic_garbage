@@ -22,6 +22,7 @@ class TCPCall(CallAPI):
         cmd = f"start cmd /k python {python_program_path}"
         self.process = subprocess.Popen(cmd, shell=True)
 
+        time.sleep(2)
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # 建立连接:
         self.s.connect((server_host, server_port))
@@ -55,7 +56,7 @@ class UDPCall(CallAPI):
         cmd = f"start cmd /k python {python_program_path}"
         self.process = subprocess.Popen(cmd, shell=True)
 
-        time.sleep(2)
+        time.sleep(4)
         self.s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.server_host = server_host
         self.server_port = server_port

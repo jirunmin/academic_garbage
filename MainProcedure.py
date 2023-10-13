@@ -43,6 +43,7 @@ class MainProcedure:
             operations = o.extract()
             for operation in operations:
                 self.update(operation)
+            # print(operations)
             strs.append((title, operations))
 
         return strs

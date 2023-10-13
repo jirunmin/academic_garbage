@@ -9,6 +9,7 @@ class KGramHash:
         self.hvalue = [0]
         self.pvalue = [1]
         self.base = 2
+        self.mod = 2 ** 64
         self.init_hash_value(operationHash)  # 调用初始化哈希值的方法
 
 

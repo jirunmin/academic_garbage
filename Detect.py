@@ -25,6 +25,7 @@ class Detect:
                 else:
                     self.index[v].append((title, u))  # 如果哈希值已存在，将文档信息添加到对应的列表中
 
+
     def match(self):
         # 执行文档匹配，找到匹配的文档对
         matches = {}  # 存储匹配结果的字典

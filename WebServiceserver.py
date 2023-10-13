@@ -21,4 +21,4 @@ def calculate_similarity():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-app.run(host='127.0.0.1', port=8080)
+app.run(host='127.0.0.1', port=8079)
